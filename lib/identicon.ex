@@ -50,6 +50,7 @@ defmodule Identicon do
     Takes an image struct, pattern matches th hex values and
     --> passes to Enum.chunk_every >>> https://hexdocs.pm/elixir/1.13/Enum.html#chunk_every/2
     --> passes list of lists to Enum.map where we pass a reference to our mirror_row function
+      NOTE: must pass a reference to the function because Elixir will automatically invoke a function
     --> flattens list of lists
     --> Enum.with_index >>> https://hexdocs.pm/elixir/1.13/Enum.html#with_index/2
   """
