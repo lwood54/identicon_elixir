@@ -46,6 +46,13 @@ defmodule Identicon do
     %Identicon.Image{ image | grid: grid}
   end
 
+  @doc """
+    Takes an image struct, pattern matches th hex values and
+    --> passes to Enum.chunk_every >>> https://hexdocs.pm/elixir/1.13/Enum.html#chunk_every/2
+    --> passes list of lists to Enum.map where we pass a reference to our mirror_row function
+    --> flattens list of lists
+    --> Enum.with_index >>> https://hexdocs.pm/elixir/1.13/Enum.html#with_index/2
+  """
   def build_grid(%Identicon.Image{hex: hex} = image) do
     grid =
       hex
@@ -56,10 +63,32 @@ defmodule Identicon do
     %Identicon.Image{ image | grid: grid}
   end
 
-  def mirror_row(row) do
-    [first, second | _tail] = row
+  @doc """
+    Takes a row and adds the reverse of the first and second elements to the end of the list
+
+    ## Example
+      iex> Identicon.mirror_row([1,50,200])
+      [1,50,200,50,1]
+  """
+  def mirror_row([first, second | _tail] = row) do
     row ++ [second, first]
   end
+  @doc """
+    Takes an image struct, uses pattern matching to define r,g,b and discard tail/rest.
+    Creates a new image struct taking all of the original image struct and additionally
+    defining color to a tuple of r,g,b and returning
+
+    ## Example
+      iex> image = Identicon.hash_input("some word")
+      iex> Identicon.pick_color(image)
+      %Identicon.Image{
+        color: {214, 31, 218},
+        grid: nil,
+        hex: [214, 31, 218, 231, 11, 206, 22, 200, 50, 148, 162, 21, 51, 127, 122,122],
+        pixel_map: nil
+      }
+
+  """
   def pick_color(%Identicon.Image{hex: [r, g, b | _tail]} = image) do
     %Identicon.Image{ image | color: {r, g, b}}
   end
